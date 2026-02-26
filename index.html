@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>IP Tools by Danzz VDAA</title>
+<style>
+body { font-family: Arial; background:#0b0b0b; color:#fff; text-align:center; padding:20px;}
+h1 { color:#00ffea; text-shadow:0 0 15px #00ffea; }
+button { padding:10px 20px; margin:5px; cursor:pointer; background:#ff0055; color:#fff; border:none; border-radius:5px; box-shadow:0 0 10px #ff0055;}
+input { padding:8px; width:250px; border-radius:5px; border:none; margin-bottom:10px;}
+#result { margin-top:20px; font-size:16px; text-align:left; display:inline-block; max-width:400px;}
+.copy-btn { background:#00ff00; box-shadow:0 0 10px #00ff00;}
+</style>
+</head>
+<body>
+<h1>SELAMAT MENGGUNAKAN WEBSITE CEK IP ADDRESS BY DANZZ VDAA</h1>
+<input id="ipInput" type="text" placeholder="Tempel IP disini (opsional)">
+<br>
+<button onclick="checkIP()">CEK IP</button>
+<div id="result">Masukkan IP dan klik CEK IP</div>
+
+<h2>Produk</h2>
+<ul>
+<li>RESS FREE FIREE & FILE NOSEP MLBB <button onclick="order('RESS FREE FIREE & FILE NOSEP MLBB')">ORDER</button></li>
+<li>AKUN MLBB/AKUN FREE FIREE <button onclick="order('AKUN MLBB/AKUN FREE FIREE')">ORDER</button></li>
+<li>MURID JEBOL VDA <button onclick="order('MURID JEBOL VDA')">ORDER</button></li>
+<li>MURIDD TEBARR RESS MURNI <button onclick="order('MURIDD TEBARR RESS MURNI')">ORDER</button></li>
+<li>JOIN ADMIN MURID VDAA <button onclick="order('JOIN ADMIN MURID VDAA')">ORDER</button></li>
+</ul>
+
+<p>Nomor DANA: <span id="danaNum">0881023613577</span> <button class="copy-btn" onclick="copyNumber('0881023613577')">COPY</button></p>
+<p>Nomor GOPAY: <span id="gopayNum">0882017281051</span> <button class="copy-btn" onclick="copyNumber('0882017281051')">COPY</button></p>
+
+<script>
+async function fetchFromPinIP(ip){
+  try {
+    const url = ip ? `https://pinip.net/api?format=json&ip=${ip}` : `https://pinip.net/api?format=json`;
+    const res = await fetch(url);
+    return await res.json();
+  } catch(e){ return null; }
+}
+
+async function fetchFromIPInfo(ip){
+  try {
+    const token = "public"; // public lite token, fallback
+    const url = ip ? `https://ipinfo.io/${ip}?token=${token}` : `https://ipinfo.io/json?token=${token}`;
+    const res = await fetch(url);
+    return await res.json();
+  } catch(e){ return null; }
+}
+
+async function fetchFromIPAPI(ip){
+  try {
+    const url = ip ? `https://ipapi.co/${ip}/json/` : `https://ipapi.co/json/`;
+    const res = await fetch(url);
+    return await res.json();
+  } catch(e){ return null; }
+}
+
+async function checkIP(){
+  const ip = document.getElementById('ipInput').value;
+  let data = await fetchFromPinIP(ip);
+  if(!data || data.error) data = await fetchFromIPInfo(ip);
+  if(!data || data.error) data = await fetchFromIPAPI(ip);
+  if(!data || data.error){ document.getElementById('result').innerHTML="❌ Gagal ambil data IP"; return; }
+
+  // Ambil data sesuai API fallback
+  const resultHtml = `
+<b>IP:</b> ${data.ip || data.ip_address || data.query || 'Unknown'}<br>
+<b>City:</b> ${data.city || 'Unknown'}<br>
+<b>Region:</b> ${data.region || data.region_name || 'Unknown'}<br>
+<b>Country:</b> ${data.country || 'Unknown'}<br>
+<b>Org:</b> ${data.org || data.org_name || 'Unknown'}<br>
+<b>ASN:</b> ${data.asn || data.asn_number || 'Unknown'}<br>
+<b>Latitude:</b> ${data.latitude || data.lat || 'Unknown'}<br>
+<b>Longitude:</b> ${data.longitude || data.lon || 'Unknown'}<br>
+<b>Timezone:</b> ${data.timezone || 'Unknown'}<br>
+<b>Postal:</b> ${data.postal || 'Unknown'}<br>
+<b>Continent:</b> ${data.continent || 'Unknown'}<br>
+<b>Proxy/VPN:</b> ${data.proxy || 'Unknown'}
+`;
+  document.getElementById('result').innerHTML = resultHtml;
+}
+
+function copyNumber(num){
+  navigator.clipboard.writeText(num);
+  alert("Nomor berhasil dicopy!");
+}
+
+function order(product){
+  const msg = `Assalamualaikum admin, saya membeli produk ${product} di website admin & saya sudah membayar produk sesuai harga, tolong dikonfirmasi yah min🙏🙏☺️`;
+  window.open(`https://t.me/danzzzznosep?text=${encodeURIComponent(msg)}`, "_blank");
+  alert("Terimakasih sudah order di website Danzz id!");
+}
+</script>
+</body>
+</html>
