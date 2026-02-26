@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>IP Tools by Danzz VDAA</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #0b0b0b;
+    color: #fff;
+    text-align: center;
+    padding: 25px;
+}
+h1 {
+    color: #00ffea;
+    text-shadow: 0 0 15px #00ffea;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+#creator {
+    color: #ffea00;
+    font-size: 32px;
+    text-shadow: 0 0 12px #ffea00;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+input {
+    padding: 14px;
+    width: 320px;
+    border-radius: 8px;
+    border: none;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+button {
+    padding: 16px 32px;
+    margin: 6px;
+    cursor: pointer;
+    background: #ff0055;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 0 12px #ff0055;
+    font-size: 18px;
+}
+#result {
+    margin-top: 25px;
+    font-size: 18px;
+    text-align: left;
+    display: inline-block;
+    max-width: 400px;
+}
+.copy-btn {
+    background: #00ff00;
+    box-shadow: 0 0 10px #00ff00;
+    font-size: 16px;
+    padding: 12px 20px;
+}
+ul {
+    list-style: none;
+    padding: 0;
+    font-size: 18px;
+}
+li button {
+    font-size: 16px;
+    padding: 12px 20px;
+}
+</style>
+</head>
+<body>
+
+<h1>SELAMAT MENGGUNAKAN WEBSITE CEK IP ADDRESS BY DANZZ VDAA</h1>
+<p id="creator">Dibuat oleh: @DANZZ ID STOREE</p>
+
+<input id="ipInput" type="text" placeholder="Tempel IP disini (opsional)">
+<br>
+<button onclick="checkIP()">CEK IP</button>
+<div id="result">Masukkan IP dan klik CEK IP</div>
+
+<h2>Produk</h2>
+<ul>
+<li>RESS FREE FIREE & FILE NOSEP MLBB <button onclick="order('RESS FREE FIREE & FILE NOSEP MLBB')">ORDER</button></li>
+<li>AKUN MLBB/AKUN FREE FIREE <button onclick="order('AKUN MLBB/AKUN FREE FIREE')">ORDER</button></li>
+<li>MURID JEBOL VDA <button onclick="order('MURID JEBOL VDA')">ORDER</button></li>
+<li>MURIDD TEBARR RESS MURNI <button onclick="order('MURIDD TEBARR RESS MURNI')">ORDER</button></li>
+<li>JOIN ADMIN MURID VDAA <button onclick="order('JOIN ADMIN MURID VDAA')">ORDER</button></li>
+</ul>
+
+<p>Nomor DANA: <span id="danaNum">0881023613577</span> <button class="copy-btn" onclick="copyNumber('0881023613577')">COPY</button></p>
+<p>Nomor GOPAY: <span id="gopayNum">0882017281051</span> <button class="copy-btn" onclick="copyNumber('0882017281051')">COPY</button></p>
+
+<!-- Musik autoplay -->
+<audio id="bgMusic" autoplay loop>
+  <source src="musik/bgmusic.mp3" type="audio/mpeg">
+  Browsermu tidak mendukung audio.
+</audio>
+
+<script>
+async function fetchFromPinIP(ip){
+  try {
+    const url = ip ? `https://pinip.net/api?format=json&ip=${ip}` : `https://pinip.net/api?format=json`;
+    const res = await fetch(url);
+    return await res.json();
+  } catch(e){ return null; }
+}
+
+async function fetchFromIPInfo(ip){
+  try {
+    const token = "public"; 
+    const url = ip ? `https://ipinfo.io/${ip}?token=${token}` : `https://ipinfo.io/json?token=${token}`;
+    const res = await fetch(url);
+    return await res.json();
+  } catch(e){ return null; }
+}
+
+async function fetchFromIPAPI(ip){
+  try {
+    const url = ip ? `https://ipapi.co/${ip}/json/` : `https://ipapi.co/json/`;
+    const res = await fetch(url);
+    return await res.json();
+  } catch(e){ return null; }
+}
+
+async function checkIP(){
+  const ip = document.getElementById('ipInput').value;
+  let data = await fetchFromPinIP(ip);
+  if(!data || data.error) data = await fetchFromIPInfo(ip);
+  if(!data || data.error) data = await fetchFromIPAPI(ip);
+  if(!data || data.error){ document.getElementById('result').innerHTML="❌ Gagal ambil data IP"; return; }
+
+  const resultHtml = `
+<b>IP:</b> ${data.ip || data.ip_address || data.query || 'Unknown'}<br>
+<b>City:</b> ${data.city || 'Unknown'}<br>
+<b>Region:</b> ${data.region || 'Unknown'}<br>
+<b>Country:</b> ${data.country || 'Unknown'}<br>
+<b>Org:</b> ${data.org || 'Unknown'}<br>
+<b>ASN:</b> ${data.asn || 'Unknown'}<br>
+<b>Latitude:</b> ${data.latitude || data.lat || 'Unknown'}<br>
+<b>Longitude:</b> ${data.longitude || data.lon || 'Unknown'}<br>
+<b>Timezone:</b> ${data.timezone || 'Unknown'}<br>
+<b>Postal:</b> ${data.postal || 'Unknown'}<br>
+<b>Continent:</b> ${data.continent || 'Unknown'}<br>
+<b>Proxy/VPN:</b> ${data.proxy || 'Unknown'}
+`;
+  document.getElementById('result').innerHTML = resultHtml;
+}
+
+function copyNumber(num){
+  navigator.clipboard.writeText(num);
+  alert("Nomor berhasil dicopy!");
+}
+
+function order(product){
+  const msg = `Assalamualaikum admin, saya membeli produk ${product} di website admin & saya sudah membayar produk sesuai harga, tolong dikonfirmasi yah min🙏🙏☺️`;
+  window.open(`https://t.me/danzzzznosep?text=${encodeURIComponent(msg)}`, "_blank");
+  alert("Terimakasih sudah order di website Danzz id!");
+}
+</script>
+</body>
+</html>
